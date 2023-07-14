@@ -15,50 +15,97 @@ from common_code.tasks.service import TasksService
 from common_code.tasks.models import TaskData
 from common_code.service.models import Service
 from common_code.service.enums import ServiceStatus
-from common_code.common.enums import FieldDescriptionType, ExecutionUnitTagName, ExecutionUnitTagAcronym
+from common_code.common.enums import (
+    FieldDescriptionType,
+    ExecutionUnitTagName,
+    ExecutionUnitTagAcronym,
+)
 from common_code.common.models import FieldDescription, ExecutionUnitTag
 
 # Imports required by the service's model
 # TODO: 1. ADD REQUIRED IMPORTS (ALSO IN THE REQUIREMENTS.TXT)
 
+import io
+import torch
+import json
+import numpy as np
+from PIL import Image
+from local import *
+from model import *
+
 settings = get_settings()
+
+
+# Loading the Neural Network and inferences
+class TestNN:
+    def __init__(self, NN_path, classnames_path):
+        self.classnames_path = classnames_path
+
+        with open(classnames_path, "r") as f:
+            self.classnames = f.read().splitlines()
+
+        data = torch.load(NN_path, map_location=torch.device("cpu"))
+        self.network = network_models["SimplerDoodleClassifier"](
+            nbr_classes=len(self.classnames)
+        )
+        self.network.load_state_dict(data["network"])
+        self.network.eval()
+
+    def infer(self, img):
+        results = self.network(img)
+        pairs = [
+            (results[0, i].item(), self.classnames[i])
+            for i in range(len(self.classnames))
+        ]
+        pairs.sort(key=lambda x: x[0], reverse=True)
+
+        return pairs
 
 
 class MyService(Service):
     # TODO: 2. CHANGE THIS DESCRIPTION
     """
-    Sample service model
+    Doodle service
     """
 
     # Any additional fields must be excluded for Pydantic to work
     model: object = Field(exclude=True)
+    network: object = Field(type=TestNN, exlude=True)
 
     def __init__(self):
         super().__init__(
             # TODO: 3. CHANGE THE SERVICE NAME AND SLUG
-            name="Sample Service",
-            slug="sample-service",
+            name="Doodle Service",
+            slug="doodle-service",
             url=settings.service_url,
             summary=api_summary,
             description=api_description,
             status=ServiceStatus.AVAILABLE,
             # TODO: 4. CHANGE THE INPUT AND OUTPUT FIELDS
             data_in_fields=[
-                FieldDescription(name="image", type=[FieldDescriptionType.IMAGE_PNG, FieldDescriptionType.IMAGE_JPEG]),
+                FieldDescription(
+                    name="image",
+                    type=[
+                        FieldDescriptionType.IMAGE_PNG,
+                        FieldDescriptionType.IMAGE_JPEG,
+                    ],
+                ),
             ],
             data_out_fields=[
-                FieldDescription(name="result", type=[FieldDescriptionType.APPLICATION_JSON]),
+                FieldDescription(
+                    name="result", type=[FieldDescriptionType.APPLICATION_JSON]
+                ),
             ],
             tags=[
                 ExecutionUnitTag(
                     name=ExecutionUnitTagName.IMAGE_PROCESSING,
                     acronym=ExecutionUnitTagAcronym.IMAGE_PROCESSING,
                 ),
-            ]
+            ],
         )
-        
+
         # TODO: 5. INITIALIZE THE MODEL (BY IMPORTING IT FROM A FILE)
-        self.model = ...
+        self.model = TestNN(DOODLE_RECOGNITION_NETWORK, DOODLE_CLASSNAMES_PATH)
 
     # TODO: 6. CHANGE THE PROCESS METHOD (CORE OF THE SERVICE)
     def process(self, data):
@@ -66,28 +113,83 @@ class MyService(Service):
         raw = data["image"].data
         input_type = data["image"].type
         # ... do something with the raw data
+        with Image.open(io.BytesIO(raw)) as im:
+            if im.mode != "RGB":
+                im = im.convert("RGB")
+            im = im.resize((514, 514))
+            fulls = 255 - np.asarray(im)[:, :, 0]
+            rows = np.sum(fulls, axis=0)
+            cols = np.sum(fulls, axis=1)
 
-        # NOTE that the result must be a dictionary with the keys being the field names set in the data_out_fields
-        return {
-            "result": TaskData(
-                data=...,
-                type=FieldDescriptionType.APPLICATION_JSON
-            )
-        }
+            def findFirstNonNull(elem):
+                for i in range(elem.shape[0]):
+                    if elem[i] != 0:
+                        return i
+                return None
+
+            min_x = findFirstNonNull(rows)
+
+            if min_x is None:
+                return {
+                    "result": TaskData(
+                        data=json.dumps({"empty": 100.0}, ensure_ascii=False),
+                        type=FieldDescriptionType.APPLICATION_JSON,
+                    )
+                }
+
+            max_x = 511 - findFirstNonNull(rows[::-1])
+            min_y = findFirstNonNull(cols)
+            max_y = 511 - findFirstNonNull(cols[::-1])
+
+            crop = im.crop((min_x, min_y, max_x, max_y))
+
+            npimg = np.asarray(crop.resize((28, 28), 2))
+            npimg = npimg.astype(np.float32)[:, :, 0]
+            timg = torch.Tensor(npimg) / 256.0
+
+            choice = self.model.infer(timg[None, None, :, :])
+
+            class_labels = []
+            class_likelihood = []
+            cumul = 0
+
+            for i in range(10):
+                cumul += choice[i][0]
+                class_likelihood.append(choice[i][0])
+                class_labels.append(choice[i][1])
+                if cumul > 0.9 or choice[i][0] < 0.05:
+                    break
+
+            class_likelihood.append(1 - cumul)
+            class_labels.append("")
+            explode = [0] * len(class_labels)
+            explode[0] = 0.1
+
+            res = {
+                class_labels[i]: class_likelihood[i] for i in range(len(class_labels))
+            }
+
+            # NOTE that the result must be a dictionary with the keys being the field names set in the data_out_fields
+            return {
+                "result": TaskData(
+                    data=json.dumps(res, ensure_ascii=False),
+                    type=FieldDescriptionType.APPLICATION_JSON,
+                )
+            }
 
 
 # TODO: 7. CHANGE THE API DESCRIPTION
 api_description = """
-Sample service bla bla bla...
+This service will try to guess what have been doodled...
 """
 api_summary = """
-Sample service
+Doodle service
 """
 
 # Define the FastAPI application with information
 # TODO: 8. CHANGE THE API TITLE, VERSION, CONTACT AND LICENSE
 app = FastAPI(
-    title="Average Shade API.",
+    title="Doodle API.",
     description=api_description,
     version="0.0.1",
     contact={
@@ -106,8 +208,8 @@ app = FastAPI(
 )
 
 # Include routers from other files
-app.include_router(service_router, tags=['Service'])
-app.include_router(tasks_router, tags=['Tasks'])
+app.include_router(service_router, tags=["Service"])
+app.include_router(tasks_router, tags=["Tasks"])
 
 app.add_middleware(
     CORSMiddleware,
@@ -122,6 +224,7 @@ app.add_middleware(
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse("/docs", status_code=301)
+
 
 service_service: ServiceService | None = None
 
@@ -152,13 +255,17 @@ async def startup_event():
         for engine_url in settings.engine_urls:
             announced = False
             while not announced and retries > 0:
-                announced = await service_service.announce_service(my_service, engine_url)
+                announced = await service_service.announce_service(
+                    my_service, engine_url
+                )
                 retries -= 1
                 if not announced:
                     time.sleep(settings.engine_announce_retry_delay)
                     if retries == 0:
-                        logger.warning(f"Aborting service announcement after "
-                                       f"{settings.engine_announce_retries} retries")
+                        logger.warning(
+                            f"Aborting service announcement after "
+                            f"{settings.engine_announce_retries} retries"
+                        )
 
     # Announce the service to its engine
     asyncio.ensure_future(announce())

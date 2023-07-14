@@ -1,0 +1,345 @@
+aircraft carrier	porte-avions
+airplane	avion
+alarm clock	réveil
+ambulance	ambulance
+angel	ange
+animal migration	migration des animaux
+ant	fourmi
+anvil	enclume
+apple	Pomme
+arm	bras
+asparagus	asperges
+axe	hache
+backpack	sac à dos
+banana	banane
+bandage	bandage
+barn	Grange
+baseball bat	batte de baseball
+baseball	base-ball
+basket	corbeille
+basketball	basket
+bat	chauve souris
+bathtub	baignoire
+beach	plage
+bear	ours
+beard	barbe
+bed	lit
+bee	abeille
+belt	ceinture
+bench	banc
+bicycle	vélo
+binoculars	jumelles
+bird	oiseau
+birthday cake	gâteau d'anniversaire
+blackberry	mûre
+blueberry	myrtille
+book	livre
+boomerang	boomerang
+bottlecap	bouchon de la bouteille
+bowtie	nœud papillon
+bracelet	bracelet
+brain	cerveau
+bread	pain
+bridge	pont
+broccoli	brocoli
+broom	balais
+bucket	seau
+bulldozer	bulldozer
+bus	bus
+bush	buisson
+butterfly	papillon
+cactus	cactus
+cake	gâteau
+calculator	calculatrice
+calendar	calendrier
+camel	chameau
+camera	caméra
+camouflage	camouflage
+campfire	feu de camp
+candle	bougie
+cannon	canon
+canoe	canoë
+car	auto
+carrot	carotte
+castle	Château
+cat	chat
+ceiling fan	ventilateur de plafond
+cell phone	téléphone portable
+cello	violoncelle
+chair	chaise
+chandelier	lustre
+church	église
+circle	cercle
+clarinet	clarinette
+clock	l'horloge
+cloud	nuage
+coffee cup	tasse à café
+compass	boussole
+computer	l'ordinateur
+cookie	biscuit
+cooler	glacière
+couch	canapé
+cow	vache
+crab	crabe
+crayon	crayon
+crocodile	crocodile
+crown	couronne
+cruise ship	bateau de croisière
+cup	Coupe
+diamond	diamant
+dishwasher	Lave-vaisselle
+diving board	plongeoir
+dog	chien
+dolphin	dauphin
+donut	Donut
+door	porte
+dragon	dragon
+dresser	commode
+drill	perceuse
+drums	tambours
+duck	canard
+dumbbell	haltère
+ear	oreille
+elbow	coude
+elephant	éléphant
+envelope	enveloppe
+eraser	gomme
+eye	œil
+eyeglasses	lunettes
+face	Visage
+fan	ventilateur
+feather	plume
+fence	clôture
+finger	doigt
+fire hydrant	bouche d'incendie
+fireplace	cheminée
+firetruck	camion de pompier
+fish	poisson
+flamingo	flamant
+flashlight	lampe de poche
+flip flops	tongs
+floor lamp	lampadaire
+flower	fleur
+flying saucer	soucoupe volante
+foot	le pied
+fork	fourchette
+frog	grenouille
+frying pan	poêle à frire
+garden hose	tuyau d'arrosage
+garden	jardin
+giraffe	girafe
+goatee	barbiche
+golf club	club de golf
+grapes	les raisins
+grass	herbe
+guitar	guitare
+hamburger	Hamburger
+hammer	marteau
+hand	main
+harp	harpe
+hat	chapeau
+headphones	écouteurs
+hedgehog	hérisson
+helicopter	hélicoptère
+helmet	casque
+hexagon	hexagone
+hockey puck	rondelle de hockey
+hockey stick	crosse de hockey
+horse	cheval
+hospital	hôpital
+hot air balloon	montgolfière
+hot dog	Hot-dog
+hot tub	jacuzzi
+hourglass	Sablier
+house plant	plante d'appartement
+house	maison
+hurricane	ouragan
+ice cream	crème glacée
+jacket	veste
+jail	prison
+kangaroo	kangourou
+key	clé
+keyboard	clavier
+knee	genou
+knife	couteau
+ladder	échelle
+lantern	lanterne
+laptop	portable
+leaf	feuille
+leg	jambe
+light bulb	ampoule
+lighter	plus léger
+lighthouse	phare
+lightning	éclair
+line	ligne
+lion	lion
+lipstick	rouge à lèvres
+lobster	Homard
+lollipop	sucette
+mailbox	boites aux lettres
+map	carte
+marker	marqueur
+matches	allumettes
+megaphone	mégaphone
+mermaid	Sirène
+microphone	microphone
+microwave	four micro-onde
+monkey	singe
+moon	lune
+mosquito	moustique
+motorbike	moto
+mountain	Montagne
+mouse	Souris
+moustache	moustache
+mouth	bouche
+mug	tasse
+mushroom	champignon
+nail	clou
+necklace	Collier
+nose	nez
+ocean	océan
+octagon	octogone
+octopus	poulpe
+onion	oignon
+oven	four
+owl	chouette
+paint can	pot de peinture
+paintbrush	pinceau
+palm tree	palmier
+panda	Panda
+pants	pantalon
+paper clip	trombone
+parachute	parachute
+parrot	perroquet
+passport	passeport
+peanut	cacahuète
+pear	poire
+peas	petits pois
+pencil	crayon
+penguin	manchot
+piano	piano
+pickup truck	pick-up
+picture frame	Cadre de l'image
+pig	cochon
+pillow	oreiller
+pineapple	ananas
+pizza	pizza
+pliers	pinces
+police car	voiture de police
+pond	étang
+pool	bassin
+popsicle	glace
+postcard	carte postale
+potato	Patate
+power outlet	prise de courant
+purse	sac
+rabbit	lapin
+raccoon	raton laveur
+radio	radio
+rain	pluie
+rainbow	arc en ciel
+rake	râteau
+remote control	télécommande
+rhinoceros	rhinocéros
+rifle	fusil
+river	fleuve
+roller coaster	montagnes russes
+rollerskates	patins à roulettes
+sailboat	voilier
+sandwich	sandwich
+saw	scie
+saxophone	saxophone
+school bus	bus scolaire
+scissors	ciseaux
+scorpion	Scorpion
+screwdriver	Tournevis
+sea turtle	tortue de mer
+see saw	Balançoire
+shark	requin
+sheep	mouton
+shoe	chaussure
+shorts	shorts
+shovel	pelle
+sink	évier
+skateboard	planche à roulette
+skull	crâne
+skyscraper	gratte-ciel
+sleeping bag	sac de couchage
+smiley face	Smiley
+snail	escargot
+snake	serpent
+snorkel	tuba
+snowflake	flocon de neige
+snowman	bonhomme de neige
+soccer ball	ballon de football
+sock	chaussette
+speedboat	vedette
+spider	araignée
+spoon	cuillère
+spreadsheet	tableur
+square	carré
+squiggle	gribouillis
+squirrel	écureuil
+stairs	escaliers
+star	étoile
+steak	bifteck
+stereo	stéréo
+stethoscope	stéthoscope
+stitches	des points de suture
+stop sign	panneau stop
+stove	le fourneau
+strawberry	fraise
+streetlight	éclairage public
+string bean	Haricot
+submarine	sous-marin
+suitcase	valise
+sun	Soleil
+swan	cygne
+sweater	chandail
+swing set	balançoire
+sword	épée
+syringe	seringue
+t-shirt	T-shirt
+table	table
+teapot	théière
+teddy-bear	ours en peluche
+telephone	Téléphone
+television	télévision
+tennis racquet	raquette de tennis
+tent	tente
+The Eiffel Tower	La tour Eiffel
+The Great Wall of China	La grande muraille de Chine
+The Mona Lisa	La Joconde
+tiger	tigre
+toaster	grille-pain
+toe	doigt de pied
+toilet	toilette
+tooth	dent
+toothbrush	brosse à dents
+toothpaste	dentifrice
+tornado	tornade
+tractor	tracteur
+traffic light	feu de circulation
+train	former
+tree	arbre
+triangle	Triangle
+trombone	trombone
+truck	camion
+trumpet	trompette
+umbrella	parapluie
+underwear	sous-vêtement
+van	van
+vase	vase
+violin	violon
+washing machine	Machine à laver
+watermelon	pastèque
+waterslide	Toboggan
+whale	baleine
+wheel	roue
+windmill	Moulin à vent
+wine bottle	bouteille de vin
+wine glass	verre à vin
+wristwatch	montre-bracelet
+yoga	yoga
+zebra	zèbre
+zigzag	zigzag

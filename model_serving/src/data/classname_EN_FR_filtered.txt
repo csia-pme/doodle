@@ -1,0 +1,145 @@
+airplane	avion
+alarm clock	réveil
+ambulance	ambulance
+ant	fourmi
+anvil	enclume
+apple	Pomme
+axe	hache
+backpack	sac à dos
+banana	banane
+bat	chauve souris
+bed	lit
+bee	abeille
+belt	ceinture
+bench	banc
+bicycle	vélo
+binoculars	jumelles
+bird	oiseau
+birthday cake	gâteau d'anniversaire
+book	livre
+boomerang	boomerang
+bracelet	bracelet
+brain	cerveau
+bread	pain
+bridge	pont
+broom	balais
+bucket	seau
+bush	buisson
+butterfly	papillon
+cactus	cactus
+cake	gâteau
+camel	chameau
+camera	caméra
+campfire	feu de camp
+candle	bougie
+canoe	canoë
+car	auto
+carrot	carotte
+castle	Château
+cat	chat
+cello	violoncelle
+chair	chaise
+cloud	nuage
+coffee cup	tasse à café
+compass	boussole
+computer	l'ordinateur
+cookie	biscuit
+couch	canapé
+cow	vache
+crab	crabe
+crayon	crayon
+crocodile	crocodile
+crown	couronne
+cruise ship	bateau de croisière
+cup	Coupe
+diamond	diamant
+dog	chien
+dolphin	dauphin
+donut	Donut
+door	porte
+ear	oreille
+elephant	éléphant
+envelope	enveloppe
+eye	œil
+eyeglasses	lunettes
+face	Visage
+fan	ventilateur
+feather	plume
+firetruck	camion de pompier
+fish	poisson
+flashlight	lampe de poche
+flower	fleur
+flying saucer	soucoupe volante
+foot	le pied
+fork	fourchette
+giraffe	girafe
+guitar	guitare
+hamburger	Hamburger
+hammer	marteau
+hat	chapeau
+helicopter	hélicoptère
+helmet	casque
+hospital	hôpital
+hot air balloon	montgolfière
+hourglass	Sablier
+house plant	plante d'appartement
+house	maison
+jacket	veste
+jail	prison
+key	clé
+knife	couteau
+ladder	échelle
+leaf	feuille
+light bulb	ampoule
+lighthouse	phare
+lollipop	sucette
+mailbox	boites aux lettres
+matches	allumettes
+mosquito	moustique
+motorbike	moto
+mountain	Montagne
+mouse	Souris
+moustache	moustache
+mug	tasse
+mushroom	champignon
+pants	pantalon
+parachute	parachute
+pencil	crayon
+police car	voiture de police
+popsicle	glace
+postcard	carte postale
+radio	radio
+rifle	fusil
+saw	scie
+saxophone	saxophone
+scissors	ciseaux
+sea turtle	tortue de mer
+shoe	chaussure
+skull	crâne
+skyscraper	gratte-ciel
+smiley face	Smiley
+snowflake	flocon de neige
+spoon	cuillère
+star	étoile
+submarine	sous-marin
+suitcase	valise
+sun	Soleil
+sword	épée
+syringe	seringue
+t-shirt	T-shirt
+table	table
+teapot	théière
+tent	tente
+tooth	dent
+toothbrush	brosse à dents
+train	train
+tree	arbre
+truck	camion
+trumpet	trompette
+umbrella	parapluie
+whale	baleine
+wheel	roue
+windmill	Moulin à vent
+wine bottle	bouteille de vin
+wine glass	verre à vin
+wristwatch	montre-bracelet
