@@ -46,7 +46,7 @@ jobs:
       - name: Lint Python app
         uses: ./.github/actions/lint-python-app
         with:
-          python-app-path: ./services/doodle-service/model_serving
+          python-app-path: ./services/doodle/model_serving
 
   test:
     runs-on: ubuntu-latest
