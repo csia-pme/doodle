@@ -1,0 +1,180 @@
+# Documentation: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsuses
+name: doodle_workflow
+run-name: doodle workflow
+
+# Allow one concurrent deployment
+concurrency:
+  group: "doodle"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - prod
+    paths:
+      - .github/actions/build-and-push-docker-image-to-github/action.yml
+      - .github/actions/execute-command-on-kubernetes-cluster/action.yml
+      - .github/actions/lint-python-app/action.yml
+      - .github/actions/run-ml-experiment-with-dvc/action.yml
+      - .github/actions/test-python-app/action.yml
+      - .github/workflows/doodle.yml
+      - common-code/**/*
+      - services/doodle/**/*
+
+  pull_request:
+    paths:
+      - .github/actions/build-and-push-docker-image-to-github/action.yml
+      - .github/actions/execute-command-on-kubernetes-cluster/action.yml
+      - .github/actions/lint-python-app/action.yml
+      - .github/actions/run-ml-experiment-with-dvc/action.yml
+      - .github/actions/test-python-app/action.yml
+      - .github/workflows/doodle.yml
+      - common-code/**/*
+      - services/doodle/**/*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Lint Python app
+        uses: ./.github/actions/lint-python-app
+        with:
+          python-app-path: ./services/doodle-service/model_serving
+
+  test:
+    needs: train
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Download model
+        uses: actions/download-artifact@v3
+        with:
+          name: model
+          path: services/doodle/model_serving
+
+      - name: Test Python app
+        uses: ./.github/actions/test-python-app
+        with:
+          python-app-path: ./services/doodle/model_serving
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    # Only run on main
+    if: success() && github.ref == 'refs/heads/main'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Download model
+        uses: actions/download-artifact@v3
+        with:
+          name: model
+          path: services/doodle/model_serving
+
+      - name: Build and push Docker image to GitHub
+        id: build-and-push-docker-image-to-github
+        uses: ./.github/actions/build-and-push-docker-image-to-github
+        with:
+          docker-registry-username: ${{ github.actor }}
+          docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
+          docker-image-name: ${{ github.repository }}-doodle
+          docker-image-context: ./services/doodle/model_serving
+    outputs:
+      docker-image-tags: ${{ steps.build-and-push-docker-image-to-github.outputs.docker-image-tags }}
+
+  deploy-dev:
+    needs: release
+    runs-on: ubuntu-latest
+    # Only run on main
+    if: success() && github.ref == 'refs/heads/main'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Prepare configuration files
+        shell: bash
+        working-directory: services/doodle/model_serving/kubernetes
+        env:
+          ENVIRONMENT: production
+          LOG_LEVEL: info
+          ENGINE_URLS: '''["https://engine-csia-pme.kube.isc.heia-fr.ch"]'''
+          SERVICE_URL: https://doodle-csia-pme.kube.isc.heia-fr.ch
+        run: |
+          # Set doodle version
+          docker_image_tags=(${{ needs.release.outputs.docker-image-tags }})
+          docker_image_sha_tag="${docker_image_tags[1]}"
+          yq ".spec.template.spec.containers[0].image = \"$docker_image_sha_tag\"" doodle.stateful.yml > new-doodle.stateful.yml && mv new-doodle.stateful.yml doodle.stateful.yml
+
+          # Set doodle configuration (ConfigMap)
+          yq '.data = (.data | to_entries | map({"key": .key, "value": "${" + .key + "}"}) | from_entries)' doodle.config-map.yml | envsubst > new-doodle.config-map.yml && mv new-doodle.config-map.yml doodle.config-map.yml
+
+          # Set doodle configuration (Ingress)
+          yq ".spec.rules[0].host = \"${SERVICE_URL#*://}\"" doodle.ingress.yml > new-doodle.ingress.yml && mv new-doodle.ingress.yml doodle.ingress.yml
+          yq ".spec.tls[0].hosts[0] = \"${SERVICE_URL#*://}\"" doodle.ingress.yml > new-doodle.ingress.yml && mv new-doodle.ingress.yml doodle.ingress.yml
+
+      - name: Deploy doodle on the Kubernetes cluster
+        uses: ./.github/actions/execute-command-on-kubernetes-cluster
+        with:
+          kube-config: ${{ secrets.KUBE_CONFIG_DEV }}
+          kube-namespace: csia-pme-dev
+          kubectl-context: ./services/doodle/model_serving/kubernetes
+          kubectl-args: |
+            apply \
+              -f doodle.config-map.yml \
+              -f doodle.stateful.yml \
+              -f doodle.service.yml \
+              -f doodle.ingress.yml
+
+  deploy-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    # Only run on prod
+    if: success() && github.ref == 'refs/heads/prod'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Prepare configuration files
+        shell: bash
+        working-directory: services/doodle/model_serving/kubernetes
+        env:
+          ENVIRONMENT: production
+          LOG_LEVEL: info
+          ENGINE_URLS: '''["https://engine-csia-pme.kube.isc.heia-fr.ch"]'''
+          SERVICE_URL: https://doodle-csia-pme.kube.isc.heia-fr.ch
+        run: |
+          # Set doodle version
+          docker_image_tags=(${{ needs.release.outputs.docker-image-tags }})
+          docker_image_sha_tag="${docker_image_tags[1]}"
+          yq ".spec.template.spec.containers[0].image = \"$docker_image_sha_tag\"" doodle.stateful.yml > new-doodle.stateful.yml && mv new-doodle.stateful.yml doodle.stateful.yml
+
+          # Set doodle configuration (ConfigMap)
+          yq '.data = (.data | to_entries | map({"key": .key, "value": "${" + .key + "}"}) | from_entries)' doodle.config-map.yml | envsubst > new-doodle.config-map.yml && mv new-doodle.config-map.yml doodle.config-map.yml
+
+          # Set doodle configuration (Ingress)
+          yq ".spec.rules[0].host = \"${SERVICE_URL#*://}\"" doodle.ingress.yml > new-doodle.ingress.yml && mv new-doodle.ingress.yml doodle.ingress.yml
+          yq ".spec.tls[0].hosts[0] = \"${SERVICE_URL#*://}\"" doodle.ingress.yml > new-doodle.ingress.yml && mv new-doodle.ingress.yml doodle.ingress.yml
+
+      - name: Deploy doodle on the Kubernetes cluster
+        uses: ./.github/actions/execute-command-on-kubernetes-cluster
+        with:
+          kube-config: ${{ secrets.KUBE_CONFIG_PROD }}
+          kube-namespace: csia-pme-prod
+          kubectl-context: ./services/doodle/model_serving/kubernetes
+          kubectl-args: |
+            apply \
+              -f doodle.config-map.yml \
+              -f doodle.stateful.yml \
+              -f doodle.service.yml \
+              -f doodle.ingress.yml

@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   # This name uniquely identifies the stateful set
-  name: doodle-service-stateful
+  name: doodle-stateful
   labels:
-    app: doodle-service
+    app: doodle
 spec:
-  serviceName: doodle-service
+  serviceName: doodle
   replicas: 1
   selector:
     matchLabels:
-      app: doodle-service
+      app: doodle
   template:
     metadata:
       labels:
-        app: doodle-service
+        app: doodle
     spec:
       containers:
-        - name: doodle-service
-          image: ghcr.io/csia-pme/csia-pme-doodle-service:latest
+        - name: doodle
+          image: ghcr.io/csia-pme/csia-pme-service:latest
           # If you build the image locally, change the next line to `imagePullPolicy: Never` - there is no need to pull the image
           imagePullPolicy: Always
           ports:
@@ -33,4 +33,4 @@ spec:
               value: "3"
           envFrom:
             - configMapRef:
-                name: doodle-service-config
+                name: doodle-config

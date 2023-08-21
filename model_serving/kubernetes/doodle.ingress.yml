@@ -1,22 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: doodle-service-ingress
+  name: doodle-ingress
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "16m"
     nginx.org/client-max-body-size: "16m"
 spec:
   rules:
-    - host: doodle-service-csia-pme.kube.isc.heia-fr.ch
+    - host: doodle-csia-pme.kube.isc.heia-fr.ch
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: doodle-service-service
+                name: doodle-service
                 port:
                   number: 80
   tls:
-    - hosts:
-        - doodle-service-csia-pme.kube.isc.heia-fr.ch
+    - hosts:s
+      - doodle-csia-pme.kube.isc.heia-fr.ch

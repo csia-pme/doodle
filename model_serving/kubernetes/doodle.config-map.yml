@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: doodle-service-config
+  name: doodle-config
   labels:
-    app: doodle-service
+    app: doodle
 data:
   ENVIRONMENT: development
   LOG_LEVEL: debug
   ENGINE_URL: http://engine-service:8080
   # (the port must be the same as in the sample-service.service.yml and unused by other services)
-  SERVICE_URL: http://doodle-service-service:9595
+  SERVICE_URL: http://doodle-service:9595
