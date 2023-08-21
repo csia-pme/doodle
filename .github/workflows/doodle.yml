@@ -54,12 +54,6 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Download model
-        uses: actions/download-artifact@v3
-        with:
-          name: model
-          path: model_serving
-
       - name: Test Python app
         uses: ./.github/actions/test-python-app
         with:
@@ -74,12 +68,6 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
-
-      - name: Download model
-        uses: actions/download-artifact@v3
-        with:
-          name: model
-          path: model_serving
 
       - name: Build and push Docker image to GitHub
         id: build-and-push-docker-image-to-github
