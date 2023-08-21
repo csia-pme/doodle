@@ -98,7 +98,9 @@ def app_with_unreachable_engine_instance(unreachable_engine_instance: HTTPServer
     app.dependency_overrides.clear()
 
 
-def test_announce_to_reachable_engine(caplog: pytest.LogCaptureFixture, app_with_reachable_engine_instance):
+def test_announce_to_reachable_engine(
+    caplog: pytest.LogCaptureFixture, app_with_reachable_engine_instance
+):
     with TestClient(app_with_reachable_engine_instance):
         # We wait for the app to announce itself to the engine (ugly)
         time.sleep(5)
@@ -117,7 +119,9 @@ def test_announce_to_reachable_engine(caplog: pytest.LogCaptureFixture, app_with
         assert not warning_logs_found
 
 
-def test_announce_to_unreachable_engine(caplog: pytest.LogCaptureFixture, app_with_unreachable_engine_instance):
+def test_announce_to_unreachable_engine(
+    caplog: pytest.LogCaptureFixture, app_with_unreachable_engine_instance
+):
     with TestClient(app_with_unreachable_engine_instance):
         # We wait for the app to announce itself to the engine (ugly)
         time.sleep(5)
