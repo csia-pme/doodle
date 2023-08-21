@@ -20,7 +20,7 @@ on:
       - .github/actions/test-python-app/action.yml
       - .github/workflows/doodle.yml
       - common-code/**/*
-      - **/*
+      - /**/*
 
   pull_request:
     paths:
@@ -31,7 +31,7 @@ on:
       - .github/actions/test-python-app/action.yml
       - .github/workflows/doodle.yml
       - common-code/**/*
-      - doodle/**/*
+      - /**/*
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
