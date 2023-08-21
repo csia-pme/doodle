@@ -23,7 +23,6 @@ from common_code.common.enums import (
 from common_code.common.models import FieldDescription, ExecutionUnitTag
 
 # Imports required by the service's model
-# TODO: 1. ADD REQUIRED IMPORTS (ALSO IN THE REQUIREMENTS.TXT)
 
 import io
 import torch
@@ -63,7 +62,6 @@ class TestNN:
 
 
 class MyService(Service):
-    # TODO: 2. CHANGE THIS DESCRIPTION
     """
     Doodle service
     """
@@ -74,14 +72,12 @@ class MyService(Service):
 
     def __init__(self):
         super().__init__(
-            # TODO: 3. CHANGE THE SERVICE NAME AND SLUG
             name="Doodle Service",
             slug="doodle-service",
             url=settings.service_url,
             summary=api_summary,
             description=api_description,
             status=ServiceStatus.AVAILABLE,
-            # TODO: 4. CHANGE THE INPUT AND OUTPUT FIELDS
             data_in_fields=[
                 FieldDescription(
                     name="image",
@@ -104,10 +100,8 @@ class MyService(Service):
             ],
         )
 
-        # TODO: 5. INITIALIZE THE MODEL (BY IMPORTING IT FROM A FILE)
         self.model = TestNN(DOODLE_RECOGNITION_NETWORK, DOODLE_CLASSNAMES_PATH)
 
-    # TODO: 6. CHANGE THE PROCESS METHOD (CORE OF THE SERVICE)
     def process(self, data):
         # NOTE that the data is a dictionary with the keys being the field names set in the data_in_fields
         raw = data["image"].data
@@ -178,7 +172,6 @@ class MyService(Service):
             }
 
 
-# TODO: 7. CHANGE THE API DESCRIPTION
 api_description = """
 This service will try to guess what have been doodled...
 """
@@ -187,7 +180,6 @@ Doodle service
 """
 
 # Define the FastAPI application with information
-# TODO: 8. CHANGE THE API TITLE, VERSION, CONTACT AND LICENSE
 app = FastAPI(
     title="Doodle API.",
     description=api_description,
