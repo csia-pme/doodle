@@ -20,7 +20,7 @@ on:
       - .github/actions/test-python-app/action.yml
       - .github/workflows/doodle.yml
       - common-code/**/*
-      - services/doodle/**/*
+      - **/*
 
   pull_request:
     paths:
@@ -31,7 +31,7 @@ on:
       - .github/actions/test-python-app/action.yml
       - .github/workflows/doodle.yml
       - common-code/**/*
-      - services/doodle/**/*
+      - doodle/**/*
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
       - name: Lint Python app
         uses: ./.github/actions/lint-python-app
         with:
-          python-app-path: ./services/doodle/model_serving
+          python-app-path: ./model_serving
 
   test:
     runs-on: ubuntu-latest
@@ -58,12 +58,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: model
-          path: services/doodle/model_serving
+          path: model_serving
 
       - name: Test Python app
         uses: ./.github/actions/test-python-app
         with:
-          python-app-path: ./services/doodle/model_serving
+          python-app-path: ./model_serving
           token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: model
-          path: services/doodle/model_serving
+          path: model_serving
 
       - name: Build and push Docker image to GitHub
         id: build-and-push-docker-image-to-github
@@ -88,7 +88,7 @@ jobs:
           docker-registry-username: ${{ github.actor }}
           docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
           docker-image-name: ${{ github.repository }}-doodle
-          docker-image-context: ./services/doodle/model_serving
+          docker-image-context: ./model_serving
     outputs:
       docker-image-tags: ${{ steps.build-and-push-docker-image-to-github.outputs.docker-image-tags }}
 
@@ -103,7 +103,7 @@ jobs:
 
       - name: Prepare configuration files
         shell: bash
-        working-directory: services/doodle/model_serving/kubernetes
+        working-directory: model_serving/kubernetes
         env:
           ENVIRONMENT: production
           LOG_LEVEL: info
@@ -127,7 +127,7 @@ jobs:
         with:
           kube-config: ${{ secrets.KUBE_CONFIG_DEV }}
           kube-namespace: csia-pme-dev
-          kubectl-context: ./services/doodle/model_serving/kubernetes
+          kubectl-context: ./model_serving/kubernetes
           kubectl-args: |
             apply \
               -f doodle.config-map.yml \
@@ -146,7 +146,7 @@ jobs:
 
       - name: Prepare configuration files
         shell: bash
-        working-directory: services/doodle/model_serving/kubernetes
+        working-directory: model_serving/kubernetes
         env:
           ENVIRONMENT: production
           LOG_LEVEL: info
@@ -170,7 +170,7 @@ jobs:
         with:
           kube-config: ${{ secrets.KUBE_CONFIG_PROD }}
           kube-namespace: csia-pme-prod
-          kubectl-context: ./services/doodle/model_serving/kubernetes
+          kubectl-context: ./model_serving/kubernetes
           kubectl-args: |
             apply \
               -f doodle.config-map.yml \
