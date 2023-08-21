@@ -25,12 +25,19 @@ from common_code.common.models import FieldDescription, ExecutionUnitTag
 # Imports required by the service's model
 
 import io
+import os
 import torch
 import json
 import numpy as np
 from PIL import Image
-from local import *
 from model import *
+
+DOODLE_RECOGNITION_NETWORK = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "networks/simpler_long_aug.nn"
+)
+DOODLE_CLASSNAMES_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "data/classname_EN_filtered.txt"
+)
 
 settings = get_settings()
 
@@ -72,8 +79,8 @@ class MyService(Service):
 
     def __init__(self):
         super().__init__(
-            name="Doodle Service",
-            slug="doodle-service",
+            name="Doodle",
+            slug="doodle",
             url=settings.service_url,
             summary=api_summary,
             description=api_description,
