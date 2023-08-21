@@ -49,7 +49,6 @@ jobs:
           python-app-path: ./services/doodle-service/model_serving
 
   test:
-    needs: train
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
