@@ -18,5 +18,5 @@ spec:
                 port:
                   number: 80
   tls:
-    - hosts:s
-      - doodle-csia-pme.kube.isc.heia-fr.ch
+    - hosts:
+        - doodle-csia-pme.kube.isc.heia-fr.ch
