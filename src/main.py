@@ -26,11 +26,11 @@ from common_code.common.models import FieldDescription, ExecutionUnitTag
 
 import io
 import os
+import torch.nn as nn
 import torch
 import json
 import numpy as np
 from PIL import Image
-from model import *
 
 DOODLE_RECOGNITION_NETWORK = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "networks/simpler_long_aug.nn"
@@ -40,6 +40,89 @@ DOODLE_CLASSNAMES_PATH = os.path.join(
 )
 
 settings = get_settings()
+
+
+#   //////////////  DECODER   //////////////
+class SimpleDoodleClassifier(nn.Module):
+    def __init__(self, nbr_classes=354):
+        super(SimpleDoodleClassifier, self).__init__()
+
+        elems = []
+        elems += [
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding="same"),
+            nn.LeakyReLU(),
+        ]  # 28x28
+        elems += [
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding="same"),
+            nn.LeakyReLU(),
+        ]  # 28x28
+        elems += [
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding="same"),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2),
+        ]  # 14x14
+
+        elems += [nn.Flatten()]
+        elems += [nn.Linear(64 * 14 * 14, 256), nn.Dropout(), nn.LeakyReLU()]
+        elems += [nn.Linear(256, 256), nn.Dropout(), nn.LeakyReLU()]
+        elems += [nn.Linear(256, nbr_classes)]
+
+        self.network = nn.Sequential(*elems)
+
+    def forward(self, imgs):
+        likelihood = self.network(imgs)
+
+        #   stable softmax
+        normalized = (
+            torch.exp(likelihood - torch.max(likelihood, axis=1)[0][:, None]) + 1e-20
+        )
+        return normalized / torch.sum(normalized, axis=1)[:, None]
+
+
+#   //////////////  DECODER   //////////////
+class SimplerDoodleClassifier(nn.Module):
+    def __init__(self, nbr_classes=354):
+        super(SimplerDoodleClassifier, self).__init__()
+
+        elems = []
+        elems += [
+            nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, padding="same"),
+            nn.BatchNorm2d(8),
+            nn.LeakyReLU(),
+        ]  # 28x28
+        elems += [
+            nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3, padding="same"),
+            nn.BatchNorm2d(8),
+            nn.LeakyReLU(),
+        ]  # 28x28
+        elems += [
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, padding="same"),
+            nn.BatchNorm2d(16),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(2),
+        ]  # 14x14
+
+        elems += [nn.Flatten()]
+        elems += [nn.Linear(16 * 14 * 14, 256), nn.Dropout(0.25), nn.LeakyReLU()]
+        elems += [nn.Linear(256, 512), nn.Dropout(0.25), nn.LeakyReLU()]
+        elems += [nn.Linear(512, nbr_classes)]
+
+        self.network = nn.Sequential(*elems)
+
+    def forward(self, imgs):
+        likelihood = self.network(imgs)
+
+        #   stable softmax
+        normalized = (
+            torch.exp(likelihood - torch.max(likelihood, axis=1)[0][:, None]) + 1e-20
+        )
+        return normalized / torch.sum(normalized, axis=1)[:, None]
+
+
+network_models = {
+    "SimpleDoodleClassifier": SimpleDoodleClassifier,
+    "SimplerDoodleClassifier": SimplerDoodleClassifier,
+}
 
 
 # Loading the Neural Network and inferences
@@ -112,7 +195,6 @@ class MyService(Service):
     def process(self, data):
         # NOTE that the data is a dictionary with the keys being the field names set in the data_in_fields
         raw = data["image"].data
-        input_type = data["image"].type
         # ... do something with the raw data
         with Image.open(io.BytesIO(raw)) as im:
             if im.mode != "RGB":
