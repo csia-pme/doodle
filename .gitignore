@@ -35,6 +35,7 @@ Temporary Items
 ## Python
 
 # Environments
+.venv
 venv
 
 # Byte-compiled / optimized / DLL files
