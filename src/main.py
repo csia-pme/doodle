@@ -272,7 +272,7 @@ Doodle service
 app = FastAPI(
     title="Doodle API.",
     description=api_description,
-    version="0.0.1",
+    version="1.0.0",
     contact={
         "name": "CSIA-PME",
         "url": "https://swiss-ai-center.ch/",
