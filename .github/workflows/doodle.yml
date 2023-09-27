@@ -97,7 +97,7 @@ jobs:
         uses: ./.github/actions/execute-command-on-kubernetes-cluster
         with:
           kube-config: ${{ secrets.KUBE_CONFIG_DEV }}
-          kube-namespace: csia-pme-dev
+          kube-namespace: swiss-ai-center-dev
           kubectl-context: ./kubernetes
           kubectl-args: |
             apply \
@@ -140,7 +140,7 @@ jobs:
         uses: ./.github/actions/execute-command-on-kubernetes-cluster
         with:
           kube-config: ${{ secrets.KUBE_CONFIG_PROD }}
-          kube-namespace: csia-pme-prod
+          kube-namespace: swiss-ai-center-prod
           kubectl-context: ./kubernetes
           kubectl-args: |
             apply \
