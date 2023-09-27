@@ -7,6 +7,5 @@ metadata:
 data:
   ENVIRONMENT: development
   LOG_LEVEL: debug
-  ENGINE_URLS: '["http://engine-service:8080"]'
-  # (the port must be the same as in the sample-service.service.yml and unused by other services)
+  ENGINE_URLS: '["http://core-engine-service:8080"]'
   SERVICE_URL: http://doodle-service:9595
