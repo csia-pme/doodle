@@ -184,10 +184,11 @@ class MyService(Service):
             ],
             tags=[
                 ExecutionUnitTag(
-                    name=ExecutionUnitTagName.IMAGE_PROCESSING,
-                    acronym=ExecutionUnitTagAcronym.IMAGE_PROCESSING,
+                    name=ExecutionUnitTagName.IMAGE_RECOGNITION,
+                    acronym=ExecutionUnitTagAcronym.IMAGE_RECOGNITION,
                 ),
             ],
+            has_ai=True
         )
 
         self.model = TestNN(DOODLE_RECOGNITION_NETWORK, DOODLE_CLASSNAMES_PATH)
@@ -261,11 +262,9 @@ class MyService(Service):
             }
 
 
-api_description = """
-This service will try to guess what have been doodled...
+api_description = """This service will guess what have been doodled.
 """
-api_summary = """
-Doodle service
+api_summary = """This service will guess what have been doodled.
 """
 
 # Define the FastAPI application with information
@@ -276,7 +275,7 @@ app = FastAPI(
     contact={
         "name": "Swiss AI Center",
         "url": "https://swiss-ai-center.ch/",
-        "email": "info@swiss-ai-center.ch",
+        "email": "ia.recherche@hes-so.ch",
     },
     swagger_ui_parameters={
         "tagsSorter": "alpha",
