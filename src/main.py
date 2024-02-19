@@ -188,7 +188,8 @@ class MyService(Service):
                     acronym=ExecutionUnitTagAcronym.IMAGE_RECOGNITION,
                 ),
             ],
-            has_ai=True
+            has_ai=True,
+            docs_url="https://docs.swiss-ai-center.ch/reference/services/doodle/",
         )
         self._logger = get_logger(settings)
         self._model = TestNN(DOODLE_RECOGNITION_NETWORK, DOODLE_CLASSNAMES_PATH)
