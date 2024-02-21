@@ -1,6 +1,5 @@
 services:
   service:
-    container_name: doodle-service
     build:
       context: .
       dockerfile: development.Dockerfile
